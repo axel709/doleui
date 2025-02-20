@@ -8,6 +8,9 @@
         eval(scriptText);
 
         if (typeof doleui !== "undefined") {
+
+            // You can edit the code below to create your own UI
+            
             const mainWindow = doleui.createWindow("Main Window", "dark");
             const tab1 = mainWindow.addTab("Tab 1");
             const tab2 = mainWindow.addTab("Tab 2");
