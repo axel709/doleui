@@ -85,38 +85,53 @@ class Window {
     addDropdown(section, dropdownText, buttonText, dropdownInfo, options, callback) {
         const dropdownContainer = document.createElement('div');
         dropdownContainer.classList.add('dropdown-container');
-
+    
         const dropdownLabel = document.createElement('label');
         dropdownLabel.textContent = dropdownText;
         dropdownLabel.classList.add('dropdown-label');
         dropdownContainer.appendChild(dropdownLabel);
-
+    
         const select = document.createElement('select');
         select.classList.add('dropdown-select');
-
+    
         options.forEach(optionText => {
             const option = document.createElement('option');
             option.value = optionText;
             option.textContent = optionText;
             select.appendChild(option);
         });
-
+    
         dropdownContainer.appendChild(select);
-
+    
         const dropdownInfoElement = document.createElement('span');
         dropdownInfoElement.textContent = dropdownInfo;
         dropdownInfoElement.classList.add('dropdown-info');
         dropdownContainer.appendChild(dropdownInfoElement);
-
+    
         const button = document.createElement('button');
         button.textContent = buttonText;
         button.classList.add('dropdown-button');
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (e) => {
             const selectedOption = select.value;
+            let rect = button.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            let diameter = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${x - diameter / 2}px`;
+            ripple.style.top = `${y - diameter / 2}px`;
+            button.appendChild(ripple);
+    
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+    
             callback(selectedOption);
         });
+        
         dropdownContainer.appendChild(button);
-
         section.appendChild(dropdownContainer);
         return dropdownContainer;
     }
