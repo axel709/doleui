@@ -1,0 +1,382 @@
+:root {
+    --primary-bg: #f8fafc;
+    --secondary-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-color: #111827;
+    --close-color: #9ca3af;
+    --close-hover-bg: #f0f0f0;
+    --close-hover-color: #111827;
+    --font-family: "Inter", system-ui, -apple-system, sans-serif;
+    --basic-radius: 8px;
+    --tab-bg: #f0f0f0;
+    --tab-active-bg: #ffffff;
+    --tab-text-color: #111827;
+    --tab-active-text-color: #111827;
+    --tab-hover-bg: #e5e7eb;
+    --dropdown-bg: #f0f0f0;
+    --dropdown-border: #e2e8f0;
+    --dropdown-text: #111827;
+    --dropdown-info-color: #9ca3af;
+    --button-bg: #f0f0f0;
+    --button-text: #111827;
+    --button-hover-bg: #e5e7eb;
+    --toggle-bg-off: #e2e8f0;
+    --toggle-bg-on: #4ade80;
+    --toggle-handle: #ffffff;
+    --toggle-info-color: #9ca3af;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.main_Container {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    max-width: 400px;
+    background: var(--primary-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px #0000004d, 0 0 0 1px var(--border-color);
+    opacity: 0;
+    z-index: 9999;
+    backdrop-filter: blur(12px);
+    animation: slideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    height: auto;
+    padding-bottom: 15px;
+    transform: translate(-50%, -50%);
+}
+
+.main_Header {
+    background: var(--secondary-bg);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 16px 16px 0 0;
+    cursor: move;
+}
+
+.main_Title {
+    color: var(--text-color);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    margin-left: 120px
+}
+
+.main_Close {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main_Close:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
+.content {
+    font-family: var(--font-family);
+    padding: 5px;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--tab-bg);
+    overflow: hidden;
+}
+
+.tab {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: var(--tab-text-color);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 0;
+}
+
+.tab.active {
+    background-color: var(--tab-active-bg);
+    color: var(--tab-active-text-color);
+    font-weight: 600;
+}
+
+.tab:hover {
+    background-color: var(--tab-hover-bg);
+}
+
+.section {
+    padding: 10px 20px;
+    margin-bottom: 7px;
+    text-align: left;
+}
+
+.section-title {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.tab-content {
+    display: none;
+    padding: 10px;
+}
+
+.dropdown-container {
+    margin-bottom: 10px;
+}
+
+.dropdown-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-size: 0.9em;
+}
+
+.dropdown-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px 30px 8px 10px;
+    border: 1px solid var(--dropdown-border);
+    border-radius: var(--basic-radius);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-text);
+    font-size: 0.9em;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a5568'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px top 50%;
+    background-size: 16px;
+    transition: border-color 0.2s;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.dropdown-select:focus {
+    outline: none;
+    border-color: var(--tab-active-bg);
+}
+
+.dropdown-info {
+    display: block;
+    font-size: 0.8em;
+    color: var(--dropdown-info-color);
+    margin-bottom: 5px;
+}
+
+.dropdown-button {
+    padding: 8px 12px;
+    border: 1px solid var(--button-border);
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-radius: var(--basic-radius);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.dropdown-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.toggle-label {
+    margin-right: 10px;
+    color: var(--text-color);
+    font-size: 0.9em;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-bg-off);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--toggle-handle);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--toggle-bg-on);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.toggle-info {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: var(--toggle-info-color);
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.checkbox-input {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    color: var(--text-color);
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.checkbox-custom {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    background-color: var(--dropdown-bg);
+    border: 1px solid var(--dropdown-border);
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.checkbox-input:checked + .checkbox-label .checkbox-custom:after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--text-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-input:focus + .checkbox-label .checkbox-custom {
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+}
+
+.checkbox-text {
+    line-height: 1.4;
+}
+
+.checkbox-info {
+    display: block;
+    font-size: 0.8em;
+    color: var(--dropdown-info-color);
+    margin-top: 5px;
+    margin-left: 28px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+
+.button-label {
+    color: var(--text-color);
+    font-size: 0.9em;
+}
+
+.button {
+    padding: 8px 12px;
+    border: 1px solid var(--button-border);
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-radius: var(--basic-radius);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.button-info {
+    display: block;
+    font-size: 0.8em;
+    color: var(--dropdown-info-color);
+    margin-top: 5px;
+}
+
+.button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
