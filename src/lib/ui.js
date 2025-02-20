@@ -295,6 +295,9 @@ class Window {
     }
 
     close() {
-        this.element.remove();
+        this.element.classList.add('closing');
+        setTimeout(() => {
+            this.element.remove();
+        }, 200);
     }
 }

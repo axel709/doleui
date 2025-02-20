@@ -429,6 +429,10 @@ input:checked + .toggle-slider:before {
     opacity: 0.8;
 }
 
+.closing {
+    animation: close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -449,6 +453,18 @@ input:checked + .toggle-slider:before {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes close {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
     }
 }
 `;
@@ -761,7 +777,10 @@ this.applyTheme = function(theme) {
     }
 
     close() {
-        this.element.remove();
+        this.element.classList.add('closing');
+        setTimeout(() => {
+            this.element.remove();
+        }, 200);
     }
 }
 
