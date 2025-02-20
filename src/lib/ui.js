@@ -125,24 +125,28 @@ class Window {
         const toggleContainer = document.createElement('div');
         toggleContainer.classList.add('toggle-container');
     
+        const toggleRow = document.createElement('div');
+        toggleRow.classList.add('toggle-row');
+    
         const toggleLabel = document.createElement('label');
         toggleLabel.textContent = toggleText;
         toggleLabel.classList.add('toggle-label');
-        toggleContainer.appendChild(toggleLabel);
+        toggleRow.appendChild(toggleLabel);
     
         const toggleSwitch = document.createElement('label');
         toggleSwitch.classList.add('toggle-switch');
-        
+    
         const toggleInput = document.createElement('input');
         toggleInput.type = 'checkbox';
-        toggleSwitch.appendChild(toggleInput);
         toggleInput.checked = initialChecked;
-        
+        toggleSwitch.appendChild(toggleInput);
+    
         const toggleSlider = document.createElement('span');
         toggleSlider.classList.add('toggle-slider');
         toggleSwitch.appendChild(toggleSlider);
-        
-        toggleContainer.appendChild(toggleSwitch);
+    
+        toggleRow.appendChild(toggleSwitch);
+        toggleContainer.appendChild(toggleRow);
     
         const toggleInfoElement = document.createElement('span');
         toggleInfoElement.textContent = toggleInfo;
@@ -156,6 +160,7 @@ class Window {
         section.appendChild(toggleContainer);
         return toggleContainer;
     }
+    
 
     addCheckbox(section, checkboxText, checkboxInfo, initialChecked = false, callback) {
         const checkboxContainer = document.createElement('div');
