@@ -161,7 +161,6 @@ class Window {
         return toggleContainer;
     }
     
-
     addCheckbox(section, checkboxText, checkboxInfo, initialChecked = false, callback) {
         const checkboxContainer = document.createElement('div');
         checkboxContainer.classList.add('checkbox-container');

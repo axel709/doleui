@@ -389,7 +389,7 @@ input:checked + .toggle-slider:before {
 .ripple {
     position: absolute;
     border-radius: 50%;
-    background-color: var(--tab-active-bg); /* Voeg een fallback kleur toe */
+    background-color: var(--tab-active-bg);
     width: 10px;
     height: 10px;
     transform: scale(0);
@@ -596,7 +596,6 @@ this.applyTheme = function(theme) {
         return toggleContainer;
     }
     
-
     addCheckbox(section, checkboxText, checkboxInfo, initialChecked = false, callback) {
         const checkboxContainer = document.createElement('div');
         checkboxContainer.classList.add('checkbox-container');
