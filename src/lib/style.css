@@ -99,12 +99,14 @@
     padding: 5px;
     text-align: center;
     color: #9ca3af;
+    cursor: default;
 }
 
 .tabs {
     display: flex;
     background-color: var(--tab-bg);
     overflow: hidden;
+    cursor: default;
 }
 
 .tab {
