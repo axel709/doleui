@@ -1,11 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const cssPath = path.join(__dirname, '..', 'src', 'lib', 'style.css');
-const jsPath = path.join(__dirname, '..', 'src', 'lib', 'ui.js');
-const themesPath = path.join(__dirname, '..', 'src', 'lib', 'themes.json');
-const outputPath = path.join(__dirname, '..', 'output', 'main.js');
-const examplePath = path.join(__dirname, '..', 'output', 'example.js');
+const cssPath = path.join(__dirname, 'lib', 'style.css');
+const jsPath = path.join(__dirname, 'lib', 'ui.js');
+const themesPath = path.join(__dirname, 'lib', 'themes.json');
+const binPath = path.join(__dirname, '..', 'bin');
+const examplePath = path.join(__dirname, '..', 'example');
+
+const gitHubBaseUrl = "https://raw.githubusercontent.com/axel709/doleui/main/bin/doleui.js";
 
 const css = fs.readFileSync(cssPath, 'utf8');
 let js = fs.readFileSync(jsPath, 'utf8');
@@ -28,10 +30,12 @@ const constructorIndex = js.indexOf('constructor(title, theme)');
 if (constructorIndex === -1) {
     throw new Error('Could not find constructor in ui.js');
 }
-
-js = js.slice(0, constructorIndex + 'constructor(title, theme) {'.length) + themesCode + js.slice(constructorIndex + 'constructor(title, theme) {'.length);
+js = js.slice(0, constructorIndex + 'constructor(title, theme) {'.length) +
+     themesCode +
+     js.slice(constructorIndex + 'constructor(title, theme) {'.length);
 
 const combined = `
+// GitHub URL: https://github.com/axel709/doleui
 (function() {
     const style = document.createElement('style');
     style.textContent = \`${css}\`;
@@ -101,8 +105,10 @@ mainWindow.addButton(
 );
 `;
 
-fs.mkdirSync(path.join(__dirname, '..', 'output'), { recursive: true });
-fs.writeFileSync(outputPath, combined);
-fs.writeFileSync(examplePath, example);
+fs.mkdirSync(binPath, { recursive: true });
+fs.mkdirSync(examplePath, { recursive: true });
+
+fs.writeFileSync(path.join(binPath, 'doleui.js'), combined);
+fs.writeFileSync(path.join(examplePath, 'example.js'), example);
 
 console.log('doleui library built successfully!');
