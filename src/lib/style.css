@@ -52,6 +52,7 @@
     height: auto;
     padding-bottom: 15px;
     transform: translate(-50%, -50%);
+    cursor: move;
 }
 
 .main_Header {
@@ -132,6 +133,9 @@
     padding: 10px 20px;
     margin-bottom: 7px;
     text-align: left;
+    background-color: var(--box-color);
+    color: white;
+    border-radius: 15px;
 }
 
 .section-title {
