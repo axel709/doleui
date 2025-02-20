@@ -208,25 +208,42 @@ class Window {
     addButton(selection, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
-        
+    
         const buttonLabel = document.createElement('label');
         buttonLabel.textContent = buttonTitle;
         buttonLabel.classList.add('button-label');
         buttonContainer.appendChild(buttonLabel);
-        
+    
         const button = document.createElement('button');
         button.textContent = buttonText;
         button.classList.add('button');
-        button.addEventListener('click', () => {
+    
+        button.addEventListener('click', function (e) {
+            let rect = this.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            let diameter = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${x - diameter / 2}px`;
+            ripple.style.top = `${y - diameter / 2}px`;
+            this.appendChild(ripple);
+    
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+    
             callback();
         });
+    
         buttonContainer.appendChild(button);
-        
+    
         const buttonInfoElement = document.createElement('span');
         buttonInfoElement.textContent = buttonInfo;
         buttonInfoElement.classList.add('button-info');
         buttonContainer.appendChild(buttonInfoElement);
-        
+    
         selection.appendChild(buttonContainer);
         return buttonContainer;
     }

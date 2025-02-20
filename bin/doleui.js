@@ -356,7 +356,6 @@ input:checked + .toggle-slider:before {
     gap: 5px;
 }
 
-
 .button-label {
     color: var(--text-color);
     font-size: 0.9em;
@@ -370,8 +369,14 @@ input:checked + .toggle-slider:before {
     border-radius: var(--basic-radius);
     cursor: pointer;
     font-size: 0.9em;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s ease-in-out;
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.button:hover {
+    background-color: var(--button-hover-bg);
 }
 
 .button-info {
@@ -381,8 +386,27 @@ input:checked + .toggle-slider:before {
     margin-top: 5px;
 }
 
-.button:hover {
-    background-color: var(--button-hover-bg);
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--tab-active-bg); /* Voeg een fallback kleur toe */
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 @keyframes slideIn {
@@ -619,25 +643,42 @@ this.applyTheme = function(theme) {
     addButton(selection, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
-        
+    
         const buttonLabel = document.createElement('label');
         buttonLabel.textContent = buttonTitle;
         buttonLabel.classList.add('button-label');
         buttonContainer.appendChild(buttonLabel);
-        
+    
         const button = document.createElement('button');
         button.textContent = buttonText;
         button.classList.add('button');
-        button.addEventListener('click', () => {
+    
+        button.addEventListener('click', function (e) {
+            let rect = this.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            let diameter = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${x - diameter / 2}px`;
+            ripple.style.top = `${y - diameter / 2}px`;
+            this.appendChild(ripple);
+    
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+    
             callback();
         });
+    
         buttonContainer.appendChild(button);
-        
+    
         const buttonInfoElement = document.createElement('span');
         buttonInfoElement.textContent = buttonInfo;
         buttonInfoElement.classList.add('button-info');
         buttonContainer.appendChild(buttonInfoElement);
-        
+    
         selection.appendChild(buttonContainer);
         return buttonContainer;
     }

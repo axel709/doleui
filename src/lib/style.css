@@ -353,7 +353,6 @@ input:checked + .toggle-slider:before {
     gap: 5px;
 }
 
-
 .button-label {
     color: var(--text-color);
     font-size: 0.9em;
@@ -367,8 +366,14 @@ input:checked + .toggle-slider:before {
     border-radius: var(--basic-radius);
     cursor: pointer;
     font-size: 0.9em;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s ease-in-out;
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.button:hover {
+    background-color: var(--button-hover-bg);
 }
 
 .button-info {
@@ -378,8 +383,27 @@ input:checked + .toggle-slider:before {
     margin-top: 5px;
 }
 
-.button:hover {
-    background-color: var(--button-hover-bg);
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--tab-active-bg); /* Voeg een fallback kleur toe */
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 @keyframes slideIn {
