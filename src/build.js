@@ -92,7 +92,7 @@ const example = `
                 "Enable or disable this feature",
                 true,
                 function(isChecked) {
-                    console.log("Notifications enabled:", isChecked);
+                    console.log("Checkbox enabled:", isChecked);
                 }
             );
 
