@@ -301,7 +301,7 @@ class Window {
         const elementWidth = this.element.offsetWidth;
         const elementHeight = this.element.offsetHeight;
         const left = (windowWidth - elementWidth) / 2;
-        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1;
+        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1.5;
 
         this.element.style.left = `${left}px`;
         this.element.style.top = `${top > 0 ? top : 0}px`;

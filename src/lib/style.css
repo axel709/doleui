@@ -36,9 +36,7 @@
 
 .main_Container {
     font-family: "Inter", system-ui, -apple-system, sans-serif;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: fixed;
     width: 500px;
     max-width: 400px;
     background: var(--primary-bg);
