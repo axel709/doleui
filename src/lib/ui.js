@@ -19,19 +19,16 @@ class Window {
             <div class="tabs"></div>
             <div class="content"></div>
         `;
-    
+
         this.tabsContainer = this.element.querySelector('.tabs');
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
-    
+
         this.closeButton.addEventListener('click', () => this.close());
         document.body.appendChild(this.element);
-    
-        requestAnimationFrame(() => this.centerWindow());
         this.makeDraggable();
-        
         this.tabs = [];
-    }    
+    }
 
     applyTheme(theme) {
         if (theme && this.themes[theme]) {
@@ -295,16 +292,6 @@ class Window {
         };
 
         header.onmousedown = dragMouseDown;
-    }
-
-    centerWindow() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        this.element.style.width = `${width}px`;
-        this.element.style.height = `${height}px`;
-        this.element.style.left = "50%";
-        this.element.style.top = "50%";
-        this.element.style.transform = "translate(-50%, -50%)";
     }
 
     close() {
