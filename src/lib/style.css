@@ -142,7 +142,6 @@
     transform: translateX(-50%);
     width: 60%;
     height: 2px;
-    background: var(--toggle-bg-off);
     border-radius: 2px;
 }
 
@@ -348,8 +347,8 @@ input:checked + .toggle-slider:before {
     content: "";
     position: absolute;
     display: block;
-    left: 6px;
-    top: 2px;
+    left: 5px;
+    top: 0px;
     width: 5px;
     height: 10px;
     border: solid var(--text-color);
