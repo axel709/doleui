@@ -94,6 +94,27 @@
     color: var(--close-hover-color);
 }
 
+.main_Minimize {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    margin-right: 5px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main_Minimize:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
 .content {
     font-family: var(--font-family);
     padding: 5px;
@@ -145,7 +166,6 @@
     transform: translateX(-50%);
     width: 60%;
     height: 2px;
-    background: var(--toggle-bg-off);
     border-radius: 2px;
 }
 
@@ -351,8 +371,8 @@ input:checked + .toggle-slider:before {
     content: "";
     position: absolute;
     display: block;
-    left: 6px;
-    top: 2px;
+    left: 5px;
+    top: 0px;
     width: 5px;
     height: 10px;
     border: solid var(--text-color);
@@ -427,8 +447,39 @@ input:checked + .toggle-slider:before {
     opacity: 0.8;
 }
 
-.closing {
-    animation: close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.main_Container.closing {
+    animation: close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+.main_Container.minified {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translate(0, 0);
+    background: var(--secondary-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: minimize 0.3s ease forwards;
+    opacity: 1;
+}
+
+.main_Container.minified .main_Header,
+.main_Container.minified .tabs,
+.main_Container.minified .content {
+    display: none;
+}
+
+.main_Container.minified::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/%3E%3C/svg%3E") no-repeat center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes ripple {
@@ -447,7 +498,6 @@ input:checked + .toggle-slider:before {
         opacity: 0;
         transform: translateY(-10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -459,10 +509,35 @@ input:checked + .toggle-slider:before {
         opacity: 1;
         transform: translateY(0);
     }
-
     to {
         opacity: 0;
         transform: translateY(-10px);
+    }
+}
+
+@keyframes minimize {
+    from {
+        width: 500px;
+        height: auto;
+        border-radius: 16px;
+    }
+    to {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+}
+
+@keyframes maximize {
+    from {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    to {
+        width: 500px;
+        height: auto;
+        border-radius: 16px;
     }
 }
 `;
@@ -494,6 +569,7 @@ this.applyTheme = function(theme) {
         this.element.innerHTML = `
             <div class="main_Header">
                 <h1 class="main_Title">${this.title}</h1>
+                <button class="main_Minimize">−</button>
                 <button class="main_Close">×</button>
             </div>
             <div class="tabs"></div>
@@ -503,12 +579,16 @@ this.applyTheme = function(theme) {
         this.tabsContainer = this.element.querySelector('.tabs');
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
+        this.minimizeButton = this.element.querySelector('.main_Minimize');
 
         this.closeButton.addEventListener('click', () => this.close());
+        this.minimizeButton.addEventListener('click', () => this.toggleMinimize());
         document.body.appendChild(this.element);
         this.centerWindow();
         this.makeDraggable();
         this.tabs = [];
+        this.isMinified = false;
+        this.lastPosition = { left: null, top: null };
     }
 
     applyTheme(theme) {
@@ -700,7 +780,7 @@ this.applyTheme = function(theme) {
         return checkboxContainer;
     }
 
-    addButton(selection, buttonTitle, buttonText, buttonInfo, callback) {
+    addButton(section, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
     
@@ -739,25 +819,51 @@ this.applyTheme = function(theme) {
         buttonInfoElement.classList.add('button-info');
         buttonContainer.appendChild(buttonInfoElement);
     
-        selection.appendChild(buttonContainer);
+        section.appendChild(buttonContainer);
         return buttonContainer;
+    }
+
+    toggleMinimize() {
+        if (!this.isMinified) {
+            this.lastPosition = {
+                left: this.element.style.left,
+                top: this.element.style.top
+            };
+            this.element.classList.add('minified');
+            this.element.style.transform = 'none';
+            this.element.style.opacity = '1';
+            this.element.style.animation = 'minimize 0.3s ease forwards';
+        } else {
+            this.element.classList.remove('minified');
+            this.element.style.transform = 'none';
+            this.element.style.opacity = '1';
+            this.element.style.animation = 'maximize 0.3s ease forwards';
+
+            setTimeout(() => {
+                this.lastPosition = {
+                    left: this.element.style.left,
+                    top: this.element.style.top
+                };
+            }, 300);
+        }
+        this.isMinified = !this.isMinified;
     }
 
     makeDraggable() {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         const header = this.element.querySelector('.main_Header');
+        let isDragging = false;
 
         const dragMouseDown = (e) => {
-            e = e || window.event;
             e.preventDefault();
             pos3 = e.clientX;
             pos4 = e.clientY;
             document.onmouseup = closeDragElement;
             document.onmousemove = elementDrag;
+            isDragging = true;
         };
 
         const elementDrag = (e) => {
-            e = e || window.event;
             e.preventDefault();
             pos1 = pos3 - e.clientX;
             pos2 = pos4 - e.clientY;
@@ -770,9 +876,22 @@ this.applyTheme = function(theme) {
         const closeDragElement = () => {
             document.onmouseup = null;
             document.onmousemove = null;
+            setTimeout(() => { isDragging = false; }, 100);
         };
 
         header.onmousedown = dragMouseDown;
+
+        this.element.addEventListener('mousedown', (e) => {
+            if (this.isMinified && e.target === this.element) {
+                dragMouseDown(e);
+            }
+        });
+
+        this.element.addEventListener('click', (e) => {
+            if (this.isMinified && e.target === this.element && !isDragging) {
+                this.toggleMinimize();
+            }
+        });
     }
 
     centerWindow() {
@@ -781,7 +900,7 @@ this.applyTheme = function(theme) {
         const elementWidth = this.element.offsetWidth;
         const elementHeight = this.element.offsetHeight;
         const left = (windowWidth - elementWidth) / 2;
-        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1;
+        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1.5;
 
         this.element.style.left = `${left}px`;
         this.element.style.top = `${top > 0 ? top : 0}px`;
@@ -789,6 +908,7 @@ this.applyTheme = function(theme) {
 
     close() {
         this.element.classList.add('closing');
+        this.element.style.animation = 'close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards';
         setTimeout(() => {
             this.element.remove();
         }, 200);

@@ -91,6 +91,27 @@
     color: var(--close-hover-color);
 }
 
+.main_Minimize {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    margin-right: 5px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main_Minimize:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
 .content {
     font-family: var(--font-family);
     padding: 5px;
@@ -423,8 +444,39 @@ input:checked + .toggle-slider:before {
     opacity: 0.8;
 }
 
-.closing {
-    animation: close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.main_Container.closing {
+    animation: close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+.main_Container.minified {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translate(0, 0);
+    background: var(--secondary-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: minimize 0.3s ease forwards;
+    opacity: 1;
+}
+
+.main_Container.minified .main_Header,
+.main_Container.minified .tabs,
+.main_Container.minified .content {
+    display: none;
+}
+
+.main_Container.minified::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/%3E%3C/svg%3E") no-repeat center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes ripple {
@@ -443,7 +495,6 @@ input:checked + .toggle-slider:before {
         opacity: 0;
         transform: translateY(-10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -455,9 +506,34 @@ input:checked + .toggle-slider:before {
         opacity: 1;
         transform: translateY(0);
     }
-
     to {
         opacity: 0;
         transform: translateY(-10px);
+    }
+}
+
+@keyframes minimize {
+    from {
+        width: 500px;
+        height: auto;
+        border-radius: 16px;
+    }
+    to {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+}
+
+@keyframes maximize {
+    from {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    to {
+        width: 500px;
+        height: auto;
+        border-radius: 16px;
     }
 }

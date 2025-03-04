@@ -14,6 +14,7 @@ class Window {
         this.element.innerHTML = `
             <div class="main_Header">
                 <h1 class="main_Title">${this.title}</h1>
+                <button class="main_Minimize">−</button>
                 <button class="main_Close">×</button>
             </div>
             <div class="tabs"></div>
@@ -23,12 +24,16 @@ class Window {
         this.tabsContainer = this.element.querySelector('.tabs');
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
+        this.minimizeButton = this.element.querySelector('.main_Minimize');
 
         this.closeButton.addEventListener('click', () => this.close());
+        this.minimizeButton.addEventListener('click', () => this.toggleMinimize());
         document.body.appendChild(this.element);
         this.centerWindow();
         this.makeDraggable();
         this.tabs = [];
+        this.isMinified = false;
+        this.lastPosition = { left: null, top: null };
     }
 
     applyTheme(theme) {
@@ -220,7 +225,7 @@ class Window {
         return checkboxContainer;
     }
 
-    addButton(selection, buttonTitle, buttonText, buttonInfo, callback) {
+    addButton(section, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
     
@@ -259,25 +264,51 @@ class Window {
         buttonInfoElement.classList.add('button-info');
         buttonContainer.appendChild(buttonInfoElement);
     
-        selection.appendChild(buttonContainer);
+        section.appendChild(buttonContainer);
         return buttonContainer;
+    }
+
+    toggleMinimize() {
+        if (!this.isMinified) {
+            this.lastPosition = {
+                left: this.element.style.left,
+                top: this.element.style.top
+            };
+            this.element.classList.add('minified');
+            this.element.style.transform = 'none';
+            this.element.style.opacity = '1';
+            this.element.style.animation = 'minimize 0.3s ease forwards';
+        } else {
+            this.element.classList.remove('minified');
+            this.element.style.transform = 'none';
+            this.element.style.opacity = '1';
+            this.element.style.animation = 'maximize 0.3s ease forwards';
+
+            setTimeout(() => {
+                this.lastPosition = {
+                    left: this.element.style.left,
+                    top: this.element.style.top
+                };
+            }, 300);
+        }
+        this.isMinified = !this.isMinified;
     }
 
     makeDraggable() {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         const header = this.element.querySelector('.main_Header');
+        let isDragging = false;
 
         const dragMouseDown = (e) => {
-            e = e || window.event;
             e.preventDefault();
             pos3 = e.clientX;
             pos4 = e.clientY;
             document.onmouseup = closeDragElement;
             document.onmousemove = elementDrag;
+            isDragging = true;
         };
 
         const elementDrag = (e) => {
-            e = e || window.event;
             e.preventDefault();
             pos1 = pos3 - e.clientX;
             pos2 = pos4 - e.clientY;
@@ -290,9 +321,22 @@ class Window {
         const closeDragElement = () => {
             document.onmouseup = null;
             document.onmousemove = null;
+            setTimeout(() => { isDragging = false; }, 100);
         };
 
         header.onmousedown = dragMouseDown;
+
+        this.element.addEventListener('mousedown', (e) => {
+            if (this.isMinified && e.target === this.element) {
+                dragMouseDown(e);
+            }
+        });
+
+        this.element.addEventListener('click', (e) => {
+            if (this.isMinified && e.target === this.element && !isDragging) {
+                this.toggleMinimize();
+            }
+        });
     }
 
     centerWindow() {
@@ -309,6 +353,7 @@ class Window {
 
     close() {
         this.element.classList.add('closing');
+        this.element.style.animation = 'close 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards';
         setTimeout(() => {
             this.element.remove();
         }, 200);
