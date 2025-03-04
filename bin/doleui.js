@@ -38,22 +38,14 @@
 }
 
 .main_Container {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 500px;
-    max-width: 400px;
+    position: fixed;
     background: var(--primary-bg);
     border-radius: 16px;
     box-shadow: 0 8px 24px #0000004d, 0 0 0 1px var(--border-color);
-    opacity: 0;
     z-index: 9999;
     backdrop-filter: blur(12px);
     animation: slideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     transition: transform 0.5s ease, opacity 0.5s ease;
-    height: auto;
-    transform: translate(-50%, -50%);
     cursor: move;
 }
 
@@ -501,16 +493,19 @@ this.applyTheme = function(theme) {
             <div class="tabs"></div>
             <div class="content"></div>
         `;
-
+    
         this.tabsContainer = this.element.querySelector('.tabs');
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
-
+    
         this.closeButton.addEventListener('click', () => this.close());
         document.body.appendChild(this.element);
+    
+        requestAnimationFrame(() => this.centerWindow());
         this.makeDraggable();
+        
         this.tabs = [];
-    }
+    }    
 
     applyTheme(theme) {
         if (theme && this.themes[theme]) {
@@ -774,6 +769,17 @@ this.applyTheme = function(theme) {
         };
 
         header.onmousedown = dragMouseDown;
+    }
+
+    centerWindow() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        console.log('centerWindow called - width:', width, 'height:', height);
+        this.element.style.width = `${width}px`;
+        this.element.style.height = `${height}px`;
+        this.element.style.left = "50%";
+        this.element.style.top = "50%";
+        this.element.style.transform = "translate(-50%, -50%)";
     }
 
     close() {
