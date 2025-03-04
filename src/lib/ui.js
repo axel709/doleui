@@ -26,6 +26,7 @@ class Window {
 
         this.closeButton.addEventListener('click', () => this.close());
         document.body.appendChild(this.element);
+        this.centerWindow();
         this.makeDraggable();
         this.tabs = [];
     }
@@ -292,6 +293,18 @@ class Window {
         };
 
         header.onmousedown = dragMouseDown;
+    }
+
+    centerWindow() {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const elementWidth = this.element.offsetWidth;
+        const elementHeight = this.element.offsetHeight;
+        const left = (windowWidth - elementWidth) / 2;
+        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1;
+
+        this.element.style.left = `${left}px`;
+        this.element.style.top = `${top > 0 ? top : 0}px`;
     }
 
     close() {
