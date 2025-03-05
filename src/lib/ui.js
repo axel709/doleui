@@ -20,12 +20,17 @@ class Window {
             <div class="tabs"></div>
             <div class="content"></div>
         `;
-
+    
+        this.svgIcon = document.createElement('div');
+        this.svgIcon.classList.add('svg-icon');
+        this.svgIcon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#ffffff'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/></svg>`;
+        this.element.appendChild(this.svgIcon);
+    
         this.tabsContainer = this.element.querySelector('.tabs');
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
         this.minimizeButton = this.element.querySelector('.main_Minimize');
-
+    
         this.closeButton.addEventListener('click', () => this.close());
         this.minimizeButton.addEventListener('click', () => this.toggleMinimize());
         document.body.appendChild(this.element);
@@ -270,24 +275,36 @@ class Window {
 
     toggleMinimize() {
         if (!this.isMinified) {
-            this.lastPosition = {
-                left: this.element.style.left,
-                top: this.element.style.top
-            };
-            this.element.classList.add('minified');
-            this.element.style.transform = 'none';
-            this.element.style.opacity = '1';
-            this.element.style.animation = 'minimize 0.3s ease forwards';
-        } else {
-            this.element.classList.remove('minified');
-            this.element.style.transform = 'none';
-            this.element.style.opacity = '1';
-            this.element.style.animation = 'maximize 0.3s ease forwards';
-
+            this.tabsContainer.style.opacity = '0';
+            this.contentContainer.style.opacity = '0';
+            this.element.querySelector('.main_Header').style.opacity = '0';
+    
             setTimeout(() => {
+                this.element.classList.add('minified');
                 this.lastPosition = {
                     left: this.element.style.left,
                     top: this.element.style.top
+                };
+                this.element.style.transform = 'none';
+            }, 150);
+        } else {
+            const currentLeft = this.element.style.left;
+            const currentTop = this.element.style.top;
+    
+            this.element.classList.remove('minified');
+            this.svgIcon.style.opacity = '0';
+    
+            this.element.style.left = currentLeft;
+            this.element.style.top = currentTop;
+            this.element.style.transform = 'none';
+    
+            setTimeout(() => {
+                this.tabsContainer.style.opacity = '1';
+                this.contentContainer.style.opacity = '1';
+                this.element.querySelector('.main_Header').style.opacity = '1';
+                this.lastPosition = {
+                    left: currentLeft,
+                    top: currentTop
                 };
             }, 300);
         }

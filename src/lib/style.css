@@ -46,10 +46,10 @@
     z-index: 9999;
     backdrop-filter: blur(12px);
     animation: slideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    transition: transform 0.5s ease, opacity 0.5s ease;
     height: auto;
     transform: translate(-50%, -50%);
     cursor: move;
+    transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
 }
 
 .main_Header {
@@ -457,14 +457,18 @@ input:checked + .toggle-slider:before {
     background: var(--secondary-bg);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    animation: minimize 0.3s ease forwards;
     opacity: 1;
 }
 
 .main_Container.minified .main_Header,
 .main_Container.minified .tabs,
 .main_Container.minified .content {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.main_Container.minified .svg-icon {
+    opacity: 1;
 }
 
 .main_Container.minified::after {
@@ -477,6 +481,21 @@ input:checked + .toggle-slider:before {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.tabs, .content {
+    transition: opacity 0.15s ease;
+}
+
+.svg-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
 }
 
 @keyframes ripple {
