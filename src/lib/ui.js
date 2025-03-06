@@ -351,6 +351,56 @@ class Window {
         return container;
     }
 
+    createModal(title, description) {
+        const overlay = document.createElement('div');
+        overlay.classList.add('modal-overlay');
+        overlay.style.pointerEvents = 'auto';
+
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                modal.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        }
+
+        modal.innerHTML = `
+            <div class="modal-header">
+                <h2 class="modal-title">${title}</h2>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-description">${description}</div>
+            <div class="modal-content"></div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        const closeModal = () => {
+            modal.classList.remove('show');
+            modal.classList.add('closing');
+            modal.addEventListener('transitionend', () => {
+                overlay.remove();
+            }, { once: true });
+        };
+
+        const closeButton = modal.querySelector('.modal-close');
+        closeButton.addEventListener('click', closeModal);
+
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+        });
+
+        modal.content = modal.querySelector('.modal-content');
+        modal.addDropdown = this.addDropdown.bind(this);
+        modal.addToggle = this.addToggle.bind(this);
+        modal.addCheckbox = this.addCheckbox.bind(this);
+        modal.addButton = this.addButton.bind(this);
+
+        return modal;
+    }
+
     toggleMinimize() {
         if (!this.isMinified) {
             this.tabsContainer.style.opacity = '0';

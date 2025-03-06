@@ -571,6 +571,92 @@ input:checked + .toggle-slider:before {
     color: var(--close-hover-color);
 }
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: var(--secondary-bg);
+    border: none;
+    border-radius: 12px;
+    padding: 30px;
+    width: 550px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10001;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-out;
+    font-family: var(--font-family);
+}
+
+.modal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.modal.closing {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-title {
+    color: var(--text-color);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
+.modal-description {
+    color: var(--dropdown-info-color);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -993,6 +1079,56 @@ this.applyTheme = function(theme) {
         container.classList.add('notification-container');
         document.body.appendChild(container);
         return container;
+    }
+
+    createModal(title, description) {
+        const overlay = document.createElement('div');
+        overlay.classList.add('modal-overlay');
+        overlay.style.pointerEvents = 'auto';
+
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                modal.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        }
+
+        modal.innerHTML = `
+            <div class="modal-header">
+                <h2 class="modal-title">${title}</h2>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-description">${description}</div>
+            <div class="modal-content"></div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        const closeModal = () => {
+            modal.classList.remove('show');
+            modal.classList.add('closing');
+            modal.addEventListener('transitionend', () => {
+                overlay.remove();
+            }, { once: true });
+        };
+
+        const closeButton = modal.querySelector('.modal-close');
+        closeButton.addEventListener('click', closeModal);
+
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+        });
+
+        modal.content = modal.querySelector('.modal-content');
+        modal.addDropdown = this.addDropdown.bind(this);
+        modal.addToggle = this.addToggle.bind(this);
+        modal.addCheckbox = this.addCheckbox.bind(this);
+        modal.addButton = this.addButton.bind(this);
+
+        return modal;
     }
 
     toggleMinimize() {
