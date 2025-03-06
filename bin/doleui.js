@@ -130,7 +130,7 @@
     cursor: default;
     padding: 4px;
     margin: 12px 16 0 16px;
-    border-radius: 0 0 var(--basic-radius) var(--basic-radius);
+    border-radius: var(--basic-radius);
     gap: 4px;
     position: relative;
 }
