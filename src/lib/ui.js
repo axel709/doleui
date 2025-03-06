@@ -16,7 +16,6 @@ class Window {
         this.theme = theme;
         this.element = document.createElement('div');
         this.element.classList.add('main_Container', theme);
-        
         if (this.theme && this.themes[this.theme]) {
             for (const variable in this.themes[this.theme]) {
                 this.element.style.setProperty(variable, this.themes[this.theme][variable]);
@@ -316,9 +315,19 @@ class Window {
         notification.innerHTML = `
             <span class="notification-title">${title}</span>
             <span class="notification-message">${message}</span>
+            <button class="notification-close">×</button>
         `;
         
         notificationContainer.appendChild(notification);
+        
+        const closeButton = notification.querySelector('.notification-close');
+        closeButton.addEventListener('click', () => {
+            notification.classList.remove('show');
+            notification.classList.add('closing');
+            notification.addEventListener('transitionend', () => {
+                notification.remove();
+            }, { once: true });
+        });
         
         requestAnimationFrame(() => {
             notification.classList.add('show');
@@ -327,7 +336,6 @@ class Window {
         setTimeout(() => {
             notification.classList.remove('show');
             notification.classList.add('closing');
-            
             notification.addEventListener('transitionend', () => {
                 notification.remove();
             }, { once: true });

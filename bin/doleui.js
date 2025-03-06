@@ -501,7 +501,7 @@ input:checked + .toggle-slider:before {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 400px;
+    width: 350px;
     z-index: 10000;
     display: flex;
     flex-direction: column-reverse;
@@ -513,7 +513,7 @@ input:checked + .toggle-slider:before {
     background: var(--secondary-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--basic-radius);
-    padding: 20px 24px;
+    padding: 16px 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translateY(20px);
@@ -522,7 +522,8 @@ input:checked + .toggle-slider:before {
     flex-direction: column;
     gap: 6px;
     pointer-events: all;
-    min-height: 100px;
+    min-height: 80px;
+    position: relative;
     font-family: var(--font-family);
 }
 
@@ -539,12 +540,35 @@ input:checked + .toggle-slider:before {
 .notification-title {
     color: var(--text-color);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .notification-message {
     color: var(--dropdown-info-color);
+    font-size: 14px;
+}
+
+.notification-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
     font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
 }
 
 @keyframes ripple {
@@ -935,9 +959,19 @@ this.applyTheme = function(theme) {
         notification.innerHTML = `
             <span class="notification-title">${title}</span>
             <span class="notification-message">${message}</span>
+            <button class="notification-close">×</button>
         `;
         
         notificationContainer.appendChild(notification);
+        
+        const closeButton = notification.querySelector('.notification-close');
+        closeButton.addEventListener('click', () => {
+            notification.classList.remove('show');
+            notification.classList.add('closing');
+            notification.addEventListener('transitionend', () => {
+                notification.remove();
+            }, { once: true });
+        });
         
         requestAnimationFrame(() => {
             notification.classList.add('show');
@@ -946,7 +980,6 @@ this.applyTheme = function(theme) {
         setTimeout(() => {
             notification.classList.remove('show');
             notification.classList.add('closing');
-            
             notification.addEventListener('transitionend', () => {
                 notification.remove();
             }, { once: true });
