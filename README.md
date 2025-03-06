@@ -1,12 +1,16 @@
-# Customizable Draggable Windows
+# DoleUI - Easy Interactive Browser Menus
 
-This project provides a simple way to create customizable, draggable windows in a web browser. It uses HTML, CSS, and JavaScript to generate windows with titles, close buttons, and drag functionality. Color themes are managed through a JSON file, allowing for easy customization of the window appearance.
+DoleUI is a lightweight JavaScript library that lets you create beautiful, interactive browser menus with minimal code. Using HTML, CSS, and JavaScript, it provides draggable windows packed with tabs, sections, components like dropdowns, toggles, checkboxes, buttons, and notifications—all customizable with a simple JSON theme system. Perfect for quickly building sleek, user-friendly interfaces in the browser.
+
+## What is DoleUI?
+
+DoleUI simplifies the process of crafting polished browser-based menus. With just a few lines of code, you can create draggable windows filled with interactive elements, styled to your liking. Whether you're making a quick tool, a settings panel, or a custom widget, DoleUI cuts down the effort, delivering a modern UI out of the box. No complex setup—just paste one script and go.
 
 ## Getting Started
 
 1.  **Download the Project:**
 
-    You can download the project files as a zip archive and extract them, or clone the repository using Git:
+    Download the zip from GitHub or clone it:
 
     ```bash
     git clone https://github.com/axel709/doleui.git
@@ -15,128 +19,166 @@ This project provides a simple way to create customizable, draggable windows in 
 2.  **Navigate to the Directory:**
 
     ```bash
-    cd uilib 
+    cd doleui
     ```
 
-3.  **Build the Project:**
+3.  **Build the Library:**
 
-    This project uses a build script to generate the final output. Run the following command:
+    Run the build script to create the ready-to-use files:
 
     ```bash
     npm run build
     ```
 
-    This command will generate the necessary files in the `output` directory.
+    This generates files in the ``bin`` and ``example`` directories.
 
-4.  **Open `index.html` in your browser:**
+4.  **Try It Out:**
 
-    Open the `src/lib/index.html` file in your web browser. This will display the created windows.  Alternatively, you can copy the contents of `output/main.js` and paste it into your browser's developer console on a blank page (`about:blank`).
+    - Open ``src/lib/index.html`` in your browser to see DoleUI in action.
+    
+    - Or copy the contents of ``example/example.js``, paste it into the developer console on ``about:blank``, and watch it load everything automatically from GitHub.
 
-## How it Works
+## Project Structure
 
-The project consists of the following files:
+- **``src/lib/index.html``:** Test page for the library.
 
-*   **`src/lib/index.html`:** The main HTML file that loads the JavaScript and CSS.
-*   **`src/lib/ui.js`:** Contains the JavaScript code for creating and managing the draggable windows. It defines the `UI` class for creating windows and the `Window` class for each individual window. It handles dragging, closing, and applying themes.
-*   **`src/lib/style.css`:** Contains the CSS styles for the windows. It uses CSS variables to manage colors, which are set based on the chosen theme.
-*   **`src/lib/themes.json`:** A JSON file containing the color themes. Each theme defines the values for the CSS variables used in `style.css`.
-*   **`output/main.js`:** The bundled JavaScript file containing the UI library, including the embedded themes.
-*   **`output/example.js`:** An example script demonstrating how to create windows with different themes. This is where you would instantiate the `UI` class and create your windows.
-*   **`src/lib/build.js`:** The build script to bundle the main library.
+- **``src/lib/ui.js``:** Core JavaScript with ``UI`` and ``Window`` classes for creating menus.
+- **``src/lib/style.css``:** CSS with themeable variables for styling.
+- **``src/lib/themes.json``:** JSON file for color themes.
+- **``bin/doleui.js``:** All-in-one bundled library file.
+- **``example/example.js``:** Example script that fetches and uses DoleUI.
+- **``src/build.js``:** Script to bundle the library.
 
-The `ui.js` script dynamically creates the window elements, applies the selected theme from `themes.json` (embedded at build time), and handles the drag and close functionality. The `example.js` file shows how to use the `UI` class to create new windows and specify their themes.
+The library creates windows dynamically, applies themes from ``themes.json``, and handles all interactivity with minimal code. The example script fetches DoleUI from GitHub and shows you how easy it is to get started.
+
+## Features
+
+- **Draggable Menus:** Drag windows by their header.
+- **Minimizable:** Collapse into a small circle with the (-) button *(double click to open again)*.
+- **Tabs & Sections:** Organize content effortlessly.
+- **Interactive Components:**
+  - **Dropdowns:** Pick options with a button.
+  - **Toggles:** Flip switches on or off.
+  - **Checkboxes:** Check or uncheck options.
+  - **Buttons:** Trigger actions with a ripple effect.
+- **Notifications:** Show messages with a close button (X) and 3-second timeout, matching your theme.
+- **Theming:** Style everything with ``themes.json``.
 
 ## Customization
 
-*   **Adding/Modifying Themes:** Edit the `src/lib/themes.json` file to add new themes or modify existing ones. Each theme should define the CSS variables used in `style.css`.
-*   **Creating Windows:** Use the `UI` class in your JavaScript file (e.g., `output/example.js` or in the browser's developer console) to create new windows. You can specify the title and theme for each window. For example:
+- **Themes:** Edit ``src/lib/themes.json`` to change colors.
+- **Menus:** Create a window in a few lines:
 
     ```javascript
-    const mainWindow = doleui.createWindow("Light window", "light");
-    const secondWindow = doleui.createWindow("Dark window", "dark");
-    const thirdWindow = doleui.createWindow("Pink window", "pink");
+    const mainWindow = doleui.createWindow("My Menu", "dark");
     ```
 
-*   **Styling:** You can further customize the appearance of the windows by modifying the CSS in `src/lib/style.css`.
+- **Components:** Add features fast:
+
+    ```javascript
+    const tab = mainWindow.addTab("Options");
+    const section = mainWindow.addSection(tab, "Controls");
+    mainWindow.addDropdown(section, "Select", "Go", "Choose", ["A", "B"], console.log);
+    mainWindow.addButton(section, "Notify", "Show", "Message", () => mainWindow.createNotification("Hi", "Hello there!"));
+    ```
+
+- **Styling:** Adjust ``src/lib/style.css`` for your look.
 
 ## Building
 
-The project uses `npm run build` to create the final distributable files. The output files are generated in the `output` directory.
+Run ``npm run build`` to generate ``bin/doleui.js`` and ``example/example.js``.
 
-## Running in `about:blank`
+## Using DoleUI in ``about:blank``
 
-To run the library in a blank page (`about:blank`):
-
-1.  Open a new tab and type `about:blank` in the address bar.
-
-2.  Open your browser's developer console (usually by pressing F12).
-
-3.  Copy the entire contents of the `output/main.js` file.
-
-4.  Paste the copied content into the developer console and press Enter.  This will define the `UI` and `Window` classes.
-
-5.  Now, in the console, you can use the `doleui` object (which is the instance of the `UI` class) to create new windows:
+1. Open ``about:blank`` in a new tab.
+2. Open the developer console (F12).
+3. Copy the contents of ``example/example.js`` (or use the script below), paste it into the console, and hit Enter—it automatically loads DoleUI from GitHub:
 
     ```javascript
-    // First Window Example
-    const mainWindow = doleui.createWindow("Main Window", "dark");
-
-    // tabs
-    const tab1 = mainWindow.addTab("Tab 1");
-    const tab2 = mainWindow.addTab("Tab 2");
-
-    // sections
-    const section1 = mainWindow.addSection(tab1, "Section A");
-    const section2 = mainWindow.addSection(tab2, "Section B");
-    const section3 = mainWindow.addSection(tab2, "Section C");
-    const section4 = mainWindow.addSection(tab2, "Section D");
-
-    // dropdown (section1)
-    mainWindow.addDropdown(
-        section1,
-        "Dropdown Text",
-        "Button",
-        "Description, can leave this empty",
-        ["Option 1", "Option 2", "Option 3"],
-        function(currentOption) {
-            console.log("Selected option:", currentOption);
+    (async () => {
+        try {
+            const response = await fetch("https://raw.githubusercontent.com/axel709/doleui/main/bin/doleui.js");
+            if (!response.ok) throw new Error(`Failed to load script: ${response.statusText}`);
+            
+            const scriptText = await response.text();
+            eval(scriptText);
+    
+            if (typeof doleui !== "undefined") {
+                const mainWindow = doleui.createWindow("Main Window", "dark");
+                const tab1 = mainWindow.addTab("Tab 1");
+                const tab2 = mainWindow.addTab("Tab 2");
+                const section1 = mainWindow.addSection(tab1, "Section A");
+                const section2 = mainWindow.addSection(tab1, "Section B");
+                const section3 = mainWindow.addSection(tab2, "Section C");
+                const section4 = mainWindow.addSection(tab2, "Section D");
+                const section5 = mainWindow.addSection(tab2, "Section E");
+    
+                mainWindow.addDropdown(
+                    section1,
+                    "Dropdown Text",
+                    "Button",
+                    "Description, can leave this empty",
+                    ["Option 1", "Option 2", "Option 3"],
+                    function(currentOption) {
+                        console.log("Selected option:", currentOption);
+                    }
+                );
+    
+                mainWindow.addButton(
+                    section2,
+                    "Notification",
+                    "Show",
+                    "Shows a notification",
+                    function() {
+                        console.log("Notification button clicked");
+                        mainWindow.createNotification(
+                            "Notification",
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                            3000
+                        );
+                    }
+                );
+    
+                mainWindow.addToggle(
+                    section3,
+                    "Toggle Feature",
+                    "Enable or disable this feature",
+                    false,
+                    function(isChecked) {
+                        console.log("Toggle state:", isChecked);
+                    }
+                );
+    
+                mainWindow.addCheckbox(
+                    section4,
+                    "Toggle CheckBox",
+                    "Enable or disable this feature",
+                    true,
+                    function(isChecked) {
+                        console.log("Checkbox enabled:", isChecked);
+                    }
+                );
+    
+                mainWindow.addButton(
+                    section5,
+                    "Button Title",
+                    "Button",
+                    "Description, can leave this empty",
+                    function() {
+                        console.log("Button clicked");
+                    }
+                );
+            } else {
+                console.error("DoleUI is niet correct geladen.");
+            }
+        } catch (error) {
+            console.error("Fout bij het laden van DoleUI:", error);
         }
-    );
-
-    // toggle (section2)
-    mainWindow.addToggle(
-        section2,
-        "Toggle Feature",
-        "Enable or disable this feature",
-        false,
-        function(isChecked) {
-            console.log("Toggle state:", isChecked);
-        }
-    );
-
-    // checkBox (section3)
-    mainWindow.addCheckbox(
-        section3,
-        "Toggle CheckBox",
-        "Enable or disable this feature",
-        true,
-        function(isChecked) {
-            console.log("Notifications enabled:", isChecked);
-        }
-    );
-
-    // button (section4)
-    mainWindow.addButton(
-        section4,
-        "Button Title",
-        "Button",
-        "Description, can leave this empty",
-        function() {
-            console.log("Button clicked");
-        }
-    );
+    })();
     ```
 
-    Remember to replace `"dark"` with the desired theme name. You can find the themes inside src/lib/themes.json.
+Change ``"dark"`` to any theme from ``themes.json`` to switch styles.
 
-This approach embeds the themes data directly into the JavaScript during the build process, so no external requests are needed, making it possible to run the code in `about:blank`.
+## Ready for Release
+
+DoleUI is packed into ``bin/doleui.js``, but you don’t even need to touch it—just grab ``example/example.js`` and paste it into your console for instant menus. It’s lightweight, dependency-free, and designed to make browser menu creation fast and fun. Add it to your projects or use it standalone with a single copy-paste!
