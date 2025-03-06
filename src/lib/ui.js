@@ -1,6 +1,12 @@
 class UI {
+    constructor() {
+        this.windows = [];
+    }
+
     createWindow(title, theme = "dark") {
-        return new Window(title, theme);
+        const window = new Window(title, theme);
+        this.windows.push(window);
+        return window;
     }
 }
 
@@ -10,7 +16,14 @@ class Window {
         this.theme = theme;
         this.element = document.createElement('div');
         this.element.classList.add('main_Container', theme);
-        this.applyTheme(this.theme);
+        
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                this.element.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        } else {
+            console.error(`Theme "${this.theme}" not found in themes.json`);
+        }
 
         this.element.innerHTML = `
             <div class="main_Header">
@@ -284,6 +297,50 @@ class Window {
     
         section.appendChild(buttonContainer);
         return buttonContainer;
+    }
+
+    createNotification(title, message, duration = 3000) {
+        const notificationContainer = document.querySelector('.notification-container') || this.createNotificationContainer();
+        
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                notification.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        } else {
+            console.error(`Theme "${this.theme}" not found in themes.json`);
+        }
+        
+        notification.innerHTML = `
+            <span class="notification-title">${title}</span>
+            <span class="notification-message">${message}</span>
+        `;
+        
+        notificationContainer.appendChild(notification);
+        
+        requestAnimationFrame(() => {
+            notification.classList.add('show');
+        });
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            notification.classList.add('closing');
+            
+            notification.addEventListener('transitionend', () => {
+                notification.remove();
+            }, { once: true });
+        }, duration);
+
+        return notification;
+    }
+
+    createNotificationContainer() {
+        const container = document.createElement('div');
+        container.classList.add('notification-container');
+        document.body.appendChild(container);
+        return container;
     }
 
     toggleMinimize() {

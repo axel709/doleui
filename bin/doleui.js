@@ -497,6 +497,56 @@ input:checked + .toggle-slider:before {
     transition: opacity 0.15s ease;
 }
 
+.notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.notification {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--basic-radius);
+    padding: 20px 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: all;
+    min-height: 100px;
+    font-family: var(--font-family);
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.closing {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.notification-title {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.notification-message {
+    color: var(--dropdown-info-color);
+    font-size: 16px;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -558,8 +608,14 @@ input:checked + .toggle-slider:before {
 `;
     document.head.appendChild(style);
     class UI {
+    constructor() {
+        this.windows = [];
+    }
+
     createWindow(title, theme = "dark") {
-        return new Window(title, theme);
+        const window = new Window(title, theme);
+        this.windows.push(window);
+        return window;
     }
 }
 
@@ -580,7 +636,13 @@ this.applyTheme = function(theme) {
         this.theme = theme;
         this.element = document.createElement('div');
         this.element.classList.add('main_Container', theme);
-        this.applyTheme(this.theme);
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                this.element.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        } else {
+            console.error(`Theme "${this.theme}" not found in themes.json`);
+        }
 
         this.element.innerHTML = `
             <div class="main_Header">
@@ -854,6 +916,50 @@ this.applyTheme = function(theme) {
     
         section.appendChild(buttonContainer);
         return buttonContainer;
+    }
+
+    createNotification(title, message, duration = 3000) {
+        const notificationContainer = document.querySelector('.notification-container') || this.createNotificationContainer();
+        
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        
+        if (this.theme && this.themes[this.theme]) {
+            for (const variable in this.themes[this.theme]) {
+                notification.style.setProperty(variable, this.themes[this.theme][variable]);
+            }
+        } else {
+            console.error(`Theme "${this.theme}" not found in themes.json`);
+        }
+        
+        notification.innerHTML = `
+            <span class="notification-title">${title}</span>
+            <span class="notification-message">${message}</span>
+        `;
+        
+        notificationContainer.appendChild(notification);
+        
+        requestAnimationFrame(() => {
+            notification.classList.add('show');
+        });
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            notification.classList.add('closing');
+            
+            notification.addEventListener('transitionend', () => {
+                notification.remove();
+            }, { once: true });
+        }, duration);
+
+        return notification;
+    }
+
+    createNotificationContainer() {
+        const container = document.createElement('div');
+        container.classList.add('notification-container');
+        document.body.appendChild(container);
+        return container;
     }
 
     toggleMinimize() {

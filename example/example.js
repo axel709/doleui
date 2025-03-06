@@ -15,9 +15,10 @@
             const tab1 = mainWindow.addTab("Tab 1");
             const tab2 = mainWindow.addTab("Tab 2");
             const section1 = mainWindow.addSection(tab1, "Section A");
-            const section2 = mainWindow.addSection(tab2, "Section B");
+            const section2 = mainWindow.addSection(tab1, "Section B");
             const section3 = mainWindow.addSection(tab2, "Section C");
             const section4 = mainWindow.addSection(tab2, "Section D");
+            const section5 = mainWindow.addSection(tab2, "Section E");
 
             mainWindow.addDropdown(
                 section1,
@@ -30,8 +31,23 @@
                 }
             );
 
-            mainWindow.addToggle(
+            mainWindow.addButton(
                 section2,
+                "Notification",
+                "Show",
+                "Shows a notification",
+                function() {
+                    console.log("Notification button clicked");
+                    mainWindow.createNotification(
+                        "Notification",
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        3000
+                    );
+                }
+            );
+
+            mainWindow.addToggle(
+                section3,
                 "Toggle Feature",
                 "Enable or disable this feature",
                 false,
@@ -41,7 +57,7 @@
             );
 
             mainWindow.addCheckbox(
-                section3,
+                section4,
                 "Toggle CheckBox",
                 "Enable or disable this feature",
                 true,
@@ -51,7 +67,7 @@
             );
 
             mainWindow.addButton(
-                section4,
+                section5,
                 "Button Title",
                 "Button",
                 "Description, can leave this empty",
