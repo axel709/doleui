@@ -11,6 +11,7 @@ class Window {
         this.element = document.createElement('div');
         this.element.classList.add('main_Container', theme);
         this.applyTheme(this.theme);
+
         this.element.innerHTML = `
             <div class="main_Header">
                 <h1 class="main_Title">${this.title}</h1>
@@ -27,6 +28,12 @@ class Window {
         this.element.appendChild(this.svgIcon);
     
         this.tabsContainer = this.element.querySelector('.tabs');
+        this.tabIndicator = document.createElement('div');
+        this.tabIndicator.classList.add('tab-indicator');
+        this.tabIndicator.style.width = '0px';
+        this.tabIndicator.style.left = '0px';
+        this.tabsContainer.appendChild(this.tabIndicator);
+        
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
         this.minimizeButton = this.element.querySelector('.main_Minimize');
@@ -66,7 +73,11 @@ class Window {
         tab.tabContent = tabContent;
 
         if (this.tabs.length === 1) {
-            this.selectTab(tab); 
+            requestAnimationFrame(() => {
+                this.selectTab(tab);
+                this.tabIndicator.style.left = `${tab.offsetLeft}px`;
+                this.tabIndicator.style.width = `${tab.offsetWidth}px`;
+            });
         }
         return tab;
     }
@@ -78,6 +89,8 @@ class Window {
         });
         selectedTab.classList.add('active');
         selectedTab.tabContent.style.display = 'block';
+        this.tabIndicator.style.left = `${selectedTab.offsetLeft}px`;
+        this.tabIndicator.style.width = `${selectedTab.offsetWidth}px`;
     }
 
     addSection(tab, sectionName) {

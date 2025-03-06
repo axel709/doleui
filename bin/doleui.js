@@ -130,8 +130,9 @@
     cursor: default;
     padding: 4px;
     margin: 12px 16 0 16px;
-    border-radius: var(--basic-radius);
+    border-radius: 0 0 var(--basic-radius) var(--basic-radius);
     gap: 4px;
+    position: relative;
 }
 
 .tab {
@@ -151,27 +152,22 @@
     align-items: center;
 }
 
-.tab.active {
+.tab-indicator {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    height: 80%;
+    width: 80%;
     background-color: var(--tab-active-bg);
+    border-radius: 6px;
+    transition: left 0.3s ease, width 0.3s ease;
+    z-index: 0;
+}
+
+.tab.active {
     color: var(--tab-active-text-color);
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.tab.active:after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 2px;
-    border-radius: 2px;
-}
-
-.tab:hover {
-    background-color: var(--tab-hover-bg);
-    transform: translateY(-1px);
 }
 
 .tab:active {
@@ -585,6 +581,7 @@ this.applyTheme = function(theme) {
         this.element = document.createElement('div');
         this.element.classList.add('main_Container', theme);
         this.applyTheme(this.theme);
+
         this.element.innerHTML = `
             <div class="main_Header">
                 <h1 class="main_Title">${this.title}</h1>
@@ -601,6 +598,12 @@ this.applyTheme = function(theme) {
         this.element.appendChild(this.svgIcon);
     
         this.tabsContainer = this.element.querySelector('.tabs');
+        this.tabIndicator = document.createElement('div');
+        this.tabIndicator.classList.add('tab-indicator');
+        this.tabIndicator.style.width = '0px';
+        this.tabIndicator.style.left = '0px';
+        this.tabsContainer.appendChild(this.tabIndicator);
+        
         this.contentContainer = this.element.querySelector('.content');
         this.closeButton = this.element.querySelector('.main_Close');
         this.minimizeButton = this.element.querySelector('.main_Minimize');
@@ -640,7 +643,11 @@ this.applyTheme = function(theme) {
         tab.tabContent = tabContent;
 
         if (this.tabs.length === 1) {
-            this.selectTab(tab); 
+            requestAnimationFrame(() => {
+                this.selectTab(tab);
+                this.tabIndicator.style.left = `${tab.offsetLeft}px`;
+                this.tabIndicator.style.width = `${tab.offsetWidth}px`;
+            });
         }
         return tab;
     }
@@ -652,6 +659,8 @@ this.applyTheme = function(theme) {
         });
         selectedTab.classList.add('active');
         selectedTab.tabContent.style.display = 'block';
+        this.tabIndicator.style.left = `${selectedTab.offsetLeft}px`;
+        this.tabIndicator.style.width = `${selectedTab.offsetWidth}px`;
     }
 
     addSection(tab, sectionName) {
