@@ -60,11 +60,13 @@ const example = `
             const mainWindow = doleui.createWindow("Main Window", "dark");
             const tab1 = mainWindow.addTab("Tab 1");
             const tab2 = mainWindow.addTab("Tab 2");
+            const tab3 = mainWindow.addTab("Tab 3");
             const section1 = mainWindow.addSection(tab1, "Section A");
             const section2 = mainWindow.addSection(tab1, "Section B");
             const section3 = mainWindow.addSection(tab2, "Section C");
             const section4 = mainWindow.addSection(tab2, "Section D");
             const section5 = mainWindow.addSection(tab2, "Section E");
+            const section6 = mainWindow.addSection(tab3, "Section F");
 
             mainWindow.addDropdown(
                 section1,
@@ -124,6 +126,33 @@ const example = `
                     );
                 }
             );
+
+            const listItems = [
+                {
+                    title: "Item 1",
+                    description: "Description for item 1",
+                    image: "https://placehold.co/400"
+                },
+                {
+                    title: "Item 2",
+                    description: "Description for item 2",
+                    image: "https://placehold.co/400"
+                },
+                {
+                    title: "Item 3",
+                    description: "Description for item 3"
+                },
+                {
+                    title: "Item 4",
+                    description: "Description for item 4"
+                },
+                {
+                    title: "Item 5",
+                    description: "Description for item 5"
+                }
+            ];
+            
+            mainWindow.addList(section6, listItems);
 
         } else {
             console.error("DoleUI is niet correct geladen.");

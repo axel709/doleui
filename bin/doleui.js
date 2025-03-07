@@ -657,6 +657,60 @@ input:checked + .toggle-slider:before {
     gap: 12px;
 }
 
+.list-container {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--secondary-bg);
+    border-radius: var(--basic-radius);
+    border: 1px solid var(--border-color);
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item-image {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.list-item-text {
+    flex: 1;
+}
+
+.list-item-title {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.list-item-description {
+    font-size: 0.9em;
+    color: var(--dropdown-info-color);
+}
+
+.list-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.list-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background: var(--primary-bg);
+    border-radius: 2px;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -1129,6 +1183,42 @@ this.applyTheme = function(theme) {
         modal.addButton = this.addButton.bind(this);
 
         return modal;
+    }
+
+    addList(section, items) {
+        const listContainer = document.createElement('div');
+        listContainer.classList.add('list-container');
+
+        items.forEach(item => {
+            const listItem = document.createElement('div');
+            listItem.classList.add('list-item');
+
+            if (item.image) {
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.classList.add('list-item-image');
+                listItem.appendChild(img);
+            }
+
+            const textContainer = document.createElement('div');
+            textContainer.classList.add('list-item-text');
+
+            const title = document.createElement('div');
+            title.classList.add('list-item-title');
+            title.textContent = item.title;
+            textContainer.appendChild(title);
+
+            const description = document.createElement('div');
+            description.classList.add('list-item-description');
+            description.textContent = item.description;
+            textContainer.appendChild(description);
+
+            listItem.appendChild(textContainer);
+            listContainer.appendChild(listItem);
+        });
+
+        section.appendChild(listContainer);
+        return listContainer;
     }
 
     toggleMinimize() {

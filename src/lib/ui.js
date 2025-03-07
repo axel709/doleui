@@ -401,6 +401,42 @@ class Window {
         return modal;
     }
 
+    addList(section, items) {
+        const listContainer = document.createElement('div');
+        listContainer.classList.add('list-container');
+
+        items.forEach(item => {
+            const listItem = document.createElement('div');
+            listItem.classList.add('list-item');
+
+            if (item.image) {
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.classList.add('list-item-image');
+                listItem.appendChild(img);
+            }
+
+            const textContainer = document.createElement('div');
+            textContainer.classList.add('list-item-text');
+
+            const title = document.createElement('div');
+            title.classList.add('list-item-title');
+            title.textContent = item.title;
+            textContainer.appendChild(title);
+
+            const description = document.createElement('div');
+            description.classList.add('list-item-description');
+            description.textContent = item.description;
+            textContainer.appendChild(description);
+
+            listItem.appendChild(textContainer);
+            listContainer.appendChild(listItem);
+        });
+
+        section.appendChild(listContainer);
+        return listContainer;
+    }
+
     toggleMinimize() {
         if (!this.isMinified) {
             this.tabsContainer.style.opacity = '0';

@@ -654,6 +654,60 @@ input:checked + .toggle-slider:before {
     gap: 12px;
 }
 
+.list-container {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--secondary-bg);
+    border-radius: var(--basic-radius);
+    border: 1px solid var(--border-color);
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item-image {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.list-item-text {
+    flex: 1;
+}
+
+.list-item-title {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.list-item-description {
+    font-size: 0.9em;
+    color: var(--dropdown-info-color);
+}
+
+.list-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.list-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background: var(--primary-bg);
+    border-radius: 2px;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
