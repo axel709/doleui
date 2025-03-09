@@ -405,7 +405,7 @@ input:checked + .toggle-slider:before {
     font-size: 0.9em;
 }
 
-.button {
+.uiButton {
     padding: 8px 12px;
     border: 1px solid var(--button-border);
     background-color: var(--button-bg);
@@ -420,11 +420,11 @@ input:checked + .toggle-slider:before {
     overflow: hidden;
 }
 
-.button:hover {
+.uiButton:hover {
     background-color: var(--button-hover-bg);
 }
 
-.button-info {
+.uiButton-info {
     display: block;
     font-size: 0.8em;
     color: var(--dropdown-info-color);
