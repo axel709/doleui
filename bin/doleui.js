@@ -1050,7 +1050,7 @@ this.applyTheme = function(theme) {
     
         const button = document.createElement('button');
         button.textContent = buttonText;
-        button.classList.add('button');
+        button.classList.add('uiButton');
     
         button.addEventListener('click', function (e) {
             let rect = this.getBoundingClientRect();
