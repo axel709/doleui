@@ -402,6 +402,8 @@ input:checked + .toggle-slider:before {
 
 .button-label {
     color: var(--text-color);
+    font-size: 0.9em;
+    line-height: 1.4;
 }
 
 .uiButton {
