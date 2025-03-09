@@ -257,7 +257,7 @@ class Window {
 
     addButton(section, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
-        buttonContainer.classList.add('button-container');
+        buttonContainer.classList.add('uiButton-container');
     
         const buttonLabel = document.createElement('label');
         buttonLabel.textContent = buttonTitle;

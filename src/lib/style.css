@@ -389,7 +389,7 @@ input:checked + .toggle-slider:before {
     margin-left: 28px;
 }
 
-.button-container {
+.uiButton-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;

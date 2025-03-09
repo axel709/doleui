@@ -392,7 +392,7 @@ input:checked + .toggle-slider:before {
     margin-left: 28px;
 }
 
-.button-container {
+.uiButton-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1041,7 +1041,7 @@ this.applyTheme = function(theme) {
 
     addButton(section, buttonTitle, buttonText, buttonInfo, callback) {
         const buttonContainer = document.createElement('div');
-        buttonContainer.classList.add('button-container');
+        buttonContainer.classList.add('uiButton-container');
     
         const buttonLabel = document.createElement('label');
         buttonLabel.textContent = buttonTitle;
