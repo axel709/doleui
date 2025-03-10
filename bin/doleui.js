@@ -712,6 +712,67 @@ input:checked + .toggle-slider:before {
     border-radius: 2px;
 }
 
+.text-input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.text-input-label {
+    color: var(--text-color);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.text-input {
+    padding: 8px 12px;
+    border: 1px solid var(--dropdown-border);
+    border-radius: var(--basic-radius);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-text);
+    font-size: 0.9em;
+    font-family: var(--font-family);
+    width: 100%;
+    height: 40px;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.text-input:focus {
+    border-color: var(--tab-active-bg);
+}
+
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.textarea-label {
+    color: var(--text-color);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.textarea-input {
+    padding: 8px 12px;
+    border: 1px solid var(--dropdown-border);
+    border-radius: var(--basic-radius);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-text);
+    font-size: 0.9em;
+    font-family: var(--font-family);
+    width: 100%;
+    height: 100px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.textarea-input:focus {
+    border-color: var(--tab-active-bg);
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -1076,7 +1137,7 @@ this.applyTheme = function(theme) {
     
         const buttonInfoElement = document.createElement('span');
         buttonInfoElement.textContent = buttonInfo;
-        buttonInfoElement.classList.add('button-info');
+        buttonInfoElement.classList.add('uiButton-info');
         buttonContainer.appendChild(buttonInfoElement);
     
         section.appendChild(buttonContainer);
@@ -1220,6 +1281,105 @@ this.applyTheme = function(theme) {
 
         section.appendChild(listContainer);
         return listContainer;
+    }
+
+    addTextInput(section, labelText, placeholder = '', callback) {
+        const inputContainer = document.createElement('div');
+        inputContainer.classList.add('text-input-container');
+
+        const inputLabel = document.createElement('label');
+        inputLabel.textContent = labelText;
+        inputLabel.classList.add('text-input-label');
+        inputContainer.appendChild(inputLabel);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = placeholder;
+        input.classList.add('text-input');
+        
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            document.execCommand('insertText', false, text);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
+                    return;
+                }
+            }
+            
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, e.key);
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    document.execCommand('delete', false);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    callback(input.value);
+                }
+            }
+        });
+
+        input.addEventListener('input', () => {
+            callback(input.value);
+        });
+
+        inputContainer.appendChild(input);
+        section.appendChild(inputContainer);
+        return inputContainer;
+    }
+
+    addTextarea(section, labelText, placeholder = '', callback) {
+        const textareaContainer = document.createElement('div');
+        textareaContainer.classList.add('textarea-container');
+
+        const textareaLabel = document.createElement('label');
+        textareaLabel.textContent = labelText;
+        textareaLabel.classList.add('textarea-label');
+        textareaContainer.appendChild(textareaLabel);
+
+        const textarea = document.createElement('textarea');
+        textarea.placeholder = placeholder;
+        textarea.classList.add('textarea-input');
+        
+        textarea.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            document.execCommand('insertText', false, text);
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
+                    return;
+                }
+            }
+            
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, e.key);
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    document.execCommand('delete', false);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, '\n');
+                }
+            }
+        });
+
+        textarea.addEventListener('input', () => {
+            callback(textarea.value);
+        });
+
+        textareaContainer.appendChild(textarea);
+        section.appendChild(textareaContainer);
+        return textareaContainer;
     }
 
     toggleMinimize() {

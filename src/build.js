@@ -79,6 +79,24 @@ const example = `
                 }
             );
 
+            mainWindow.addTextInput(
+                section1,
+                "Text Input",
+                "Enter text here",
+                function(value) {
+                    console.log("Text input value:", value);
+                }
+            );
+
+            mainWindow.addTextarea(
+                section2,
+                "Textarea Input",
+                "Enter longer text here",
+                function(value) {
+                    console.log("Textarea value:", value);
+                }
+            );
+
             mainWindow.addButton(
                 section2,
                 "Notification",

@@ -291,7 +291,7 @@ class Window {
     
         const buttonInfoElement = document.createElement('span');
         buttonInfoElement.textContent = buttonInfo;
-        buttonInfoElement.classList.add('button-info');
+        buttonInfoElement.classList.add('uiButton-info');
         buttonContainer.appendChild(buttonInfoElement);
     
         section.appendChild(buttonContainer);
@@ -435,6 +435,105 @@ class Window {
 
         section.appendChild(listContainer);
         return listContainer;
+    }
+
+    addTextInput(section, labelText, placeholder = '', callback) {
+        const inputContainer = document.createElement('div');
+        inputContainer.classList.add('text-input-container');
+
+        const inputLabel = document.createElement('label');
+        inputLabel.textContent = labelText;
+        inputLabel.classList.add('text-input-label');
+        inputContainer.appendChild(inputLabel);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = placeholder;
+        input.classList.add('text-input');
+        
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            document.execCommand('insertText', false, text);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
+                    return;
+                }
+            }
+            
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, e.key);
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    document.execCommand('delete', false);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    callback(input.value);
+                }
+            }
+        });
+
+        input.addEventListener('input', () => {
+            callback(input.value);
+        });
+
+        inputContainer.appendChild(input);
+        section.appendChild(inputContainer);
+        return inputContainer;
+    }
+
+    addTextarea(section, labelText, placeholder = '', callback) {
+        const textareaContainer = document.createElement('div');
+        textareaContainer.classList.add('textarea-container');
+
+        const textareaLabel = document.createElement('label');
+        textareaLabel.textContent = labelText;
+        textareaLabel.classList.add('textarea-label');
+        textareaContainer.appendChild(textareaLabel);
+
+        const textarea = document.createElement('textarea');
+        textarea.placeholder = placeholder;
+        textarea.classList.add('textarea-input');
+        
+        textarea.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            document.execCommand('insertText', false, text);
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
+                    return;
+                }
+            }
+            
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, e.key);
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    document.execCommand('delete', false);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, '\n');
+                }
+            }
+        });
+
+        textarea.addEventListener('input', () => {
+            callback(textarea.value);
+        });
+
+        textareaContainer.appendChild(textarea);
+        section.appendChild(textareaContainer);
+        return textareaContainer;
     }
 
     toggleMinimize() {
