@@ -178,7 +178,12 @@
     background-color: var(--box-color);
     color: white;
     border-radius: 15px;
-    transition: all 0.3s ease;
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+.minified {
+    height: 45px;
 }
 
 .section-header {
@@ -215,10 +220,6 @@
 
 .section-content {
     transition: opacity 0.15s ease;
-}
-
-.section.minified .section-content {
-    display: none;
 }
 
 .tab-content {

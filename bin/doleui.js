@@ -181,7 +181,12 @@
     background-color: var(--box-color);
     color: white;
     border-radius: 15px;
-    transition: all 0.3s ease;
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+.minified {
+    height: 45px;
 }
 
 .section-header {
@@ -218,10 +223,6 @@
 
 .section-content {
     transition: opacity 0.15s ease;
-}
-
-.section.minified .section-content {
-    display: none;
 }
 
 .tab-content {
@@ -987,48 +988,66 @@ this.applyTheme = function(theme) {
     addSection(tab, sectionName) {
         const section = document.createElement('div');
         section.classList.add('section');
-
+    
         const sectionHeader = document.createElement('div');
         sectionHeader.classList.add('section-header');
-
+    
         const sectionTitle = document.createElement('div');
         sectionTitle.classList.add('section-title');
         sectionTitle.textContent = sectionName;
         sectionHeader.appendChild(sectionTitle);
-
+    
         const toggleButton = document.createElement('button');
         toggleButton.classList.add('section-toggle');
         toggleButton.textContent = '−';
         sectionHeader.appendChild(toggleButton);
-
+    
         const sectionContent = document.createElement('div');
         sectionContent.classList.add('section-content');
-
+    
         section.appendChild(sectionHeader);
         section.appendChild(sectionContent);
         tab.tabContent.appendChild(section);
-
+    
         let isMinified = false;
-
+    
+        section.style.height = 'auto';
+        section.style.overflow = 'hidden';
+    
         toggleButton.addEventListener('click', () => {
             if (!isMinified) {
+                const headerHeight = sectionHeader.offsetHeight;
+                const fullHeight = section.scrollHeight;
+                section.style.height = `${fullHeight}px`;
                 sectionContent.style.opacity = '0';
-                setTimeout(() => {
-                    sectionContent.style.display = 'none';
-                    section.classList.add('minified');
+                requestAnimationFrame(() => {
+                    section.style.height = `45px`;
                     toggleButton.textContent = '+';
-                }, 150);
+                });
+                section.addEventListener('transitionend', () => {
+                    if (section.style.height === `${headerHeight}px`) {
+                        section.classList.add('minified');
+                    }
+                }, { once: true });
             } else {
+                const headerHeight = sectionHeader.offsetHeight;
+                const fullHeight = sectionContent.scrollHeight + headerHeight;
                 section.classList.remove('minified');
-                sectionContent.style.display = 'block';
-                setTimeout(() => {
+                section.style.height = `${headerHeight}px`; 
+                requestAnimationFrame(() => {
+                    section.style.height = `${fullHeight}px`;
                     sectionContent.style.opacity = '1';
                     toggleButton.textContent = '−';
-                }, 10);
+                });
+                section.addEventListener('transitionend', () => {
+                    if (section.style.height === `${fullHeight}px`) {
+                        section.style.height = 'auto';
+                    }
+                }, { once: true });
             }
             isMinified = !isMinified;
         });
-
+    
         section.contentContainer = sectionContent;
         return section;
     }
@@ -1524,7 +1543,7 @@ this.applyTheme = function(theme) {
         const elementWidth = this.element.offsetWidth;
         const elementHeight = this.element.offsetHeight;
         const left = (windowWidth - elementWidth) / 2;
-        const top = (windowHeight - elementHeight) / 2 - elementHeight * 1.5;
+        const top = (windowHeight - elementHeight) / 2 - elementHeight * 5;
 
         this.element.style.left = `${left}px`;
         this.element.style.top = `${top > 0 ? top : 0}px`;
