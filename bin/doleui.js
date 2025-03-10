@@ -181,14 +181,47 @@
     background-color: var(--box-color);
     color: white;
     border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .section-title {
     font-size: 0.8em;
     font-weight: bold;
     color: var(--text-color);
-    margin-bottom: 10px;
-    text-align: left;
+}
+
+.section-toggle {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-toggle:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
+.section-content {
+    transition: opacity 0.15s ease;
+}
+
+.section.minified .section-content {
+    display: none;
 }
 
 .tab-content {
@@ -955,12 +988,48 @@ this.applyTheme = function(theme) {
         const section = document.createElement('div');
         section.classList.add('section');
 
+        const sectionHeader = document.createElement('div');
+        sectionHeader.classList.add('section-header');
+
         const sectionTitle = document.createElement('div');
         sectionTitle.classList.add('section-title');
         sectionTitle.textContent = sectionName;
-        section.appendChild(sectionTitle);
+        sectionHeader.appendChild(sectionTitle);
 
+        const toggleButton = document.createElement('button');
+        toggleButton.classList.add('section-toggle');
+        toggleButton.textContent = '−';
+        sectionHeader.appendChild(toggleButton);
+
+        const sectionContent = document.createElement('div');
+        sectionContent.classList.add('section-content');
+
+        section.appendChild(sectionHeader);
+        section.appendChild(sectionContent);
         tab.tabContent.appendChild(section);
+
+        let isMinified = false;
+
+        toggleButton.addEventListener('click', () => {
+            if (!isMinified) {
+                sectionContent.style.opacity = '0';
+                setTimeout(() => {
+                    sectionContent.style.display = 'none';
+                    section.classList.add('minified');
+                    toggleButton.textContent = '+';
+                }, 150);
+            } else {
+                section.classList.remove('minified');
+                sectionContent.style.display = 'block';
+                setTimeout(() => {
+                    sectionContent.style.opacity = '1';
+                    toggleButton.textContent = '−';
+                }, 10);
+            }
+            isMinified = !isMinified;
+        });
+
+        section.contentContainer = sectionContent;
         return section;
     }
 
@@ -1014,7 +1083,7 @@ this.applyTheme = function(theme) {
         });
         
         dropdownContainer.appendChild(button);
-        section.appendChild(dropdownContainer);
+        section.contentContainer.appendChild(dropdownContainer);
         return dropdownContainer;
     }
 
@@ -1054,7 +1123,7 @@ this.applyTheme = function(theme) {
             callback(toggleInput.checked);
         });
     
-        section.appendChild(toggleContainer);
+        section.contentContainer.appendChild(toggleContainer);
         return toggleContainer;
     }
     
@@ -1097,7 +1166,7 @@ this.applyTheme = function(theme) {
             callback(checkboxInput.checked);
         });
         
-        section.appendChild(checkboxContainer);
+        section.contentContainer.appendChild(checkboxContainer);
         return checkboxContainer;
     }
 
@@ -1140,8 +1209,91 @@ this.applyTheme = function(theme) {
         buttonInfoElement.classList.add('uiButton-info');
         buttonContainer.appendChild(buttonInfoElement);
     
-        section.appendChild(buttonContainer);
+        section.contentContainer.appendChild(buttonContainer);
         return buttonContainer;
+    }
+
+    addTextInput(section, labelText, placeholder = '', callback) {
+        const inputContainer = document.createElement('div');
+        inputContainer.classList.add('text-input-container');
+
+        const inputLabel = document.createElement('label');
+        inputLabel.textContent = labelText;
+        inputLabel.classList.add('text-input-label');
+        inputContainer.appendChild(inputLabel);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = placeholder;
+        input.classList.add('text-input');
+
+        input.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'a')) {
+                return;
+            }
+
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    input.value = input.value + e.key;
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    input.value = input.value.slice(0, -1);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    callback(input.value);
+                }
+            }
+        });
+
+        input.addEventListener('input', () => {
+            callback(input.value);
+        });
+
+        inputContainer.appendChild(input);
+        section.contentContainer.appendChild(inputContainer);
+        return inputContainer;
+    }
+
+    addTextarea(section, labelText, placeholder = '', callback) {
+        const textareaContainer = document.createElement('div');
+        textareaContainer.classList.add('textarea-container');
+
+        const textareaLabel = document.createElement('label');
+        textareaLabel.textContent = labelText;
+        textareaLabel.classList.add('textarea-label');
+        textareaContainer.appendChild(textareaLabel);
+
+        const textarea = document.createElement('textarea');
+        textarea.placeholder = placeholder;
+        textarea.classList.add('textarea-input');
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'a')) {
+                return;
+            }
+
+            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+                if (e.key.length === 1) {
+                    e.preventDefault();
+                    textarea.value = textarea.value + e.key;
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    textarea.value = textarea.value.slice(0, -1);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    textarea.value = textarea.value + '\n';
+                }
+            }
+        });
+
+        textarea.addEventListener('input', () => {
+            callback(textarea.value);
+        });
+
+        textareaContainer.appendChild(textarea);
+        section.contentContainer.appendChild(textareaContainer);
+        return textareaContainer;
     }
 
     createNotification(title, message, duration = 3000) {
@@ -1279,107 +1431,8 @@ this.applyTheme = function(theme) {
             listContainer.appendChild(listItem);
         });
 
-        section.appendChild(listContainer);
+        section.contentContainer.appendChild(listContainer);
         return listContainer;
-    }
-
-    addTextInput(section, labelText, placeholder = '', callback) {
-        const inputContainer = document.createElement('div');
-        inputContainer.classList.add('text-input-container');
-
-        const inputLabel = document.createElement('label');
-        inputLabel.textContent = labelText;
-        inputLabel.classList.add('text-input-label');
-        inputContainer.appendChild(inputLabel);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = placeholder;
-        input.classList.add('text-input');
-        
-        input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            document.execCommand('insertText', false, text);
-        });
-
-        input.addEventListener('keydown', (e) => {
-            if (e.ctrlKey) {
-                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
-                    return;
-                }
-            }
-            
-            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
-                if (e.key.length === 1) {
-                    e.preventDefault();
-                    document.execCommand('insertText', false, e.key);
-                } else if (e.key === 'Backspace') {
-                    e.preventDefault();
-                    document.execCommand('delete', false);
-                } else if (e.key === 'Enter') {
-                    e.preventDefault();
-                    callback(input.value);
-                }
-            }
-        });
-
-        input.addEventListener('input', () => {
-            callback(input.value);
-        });
-
-        inputContainer.appendChild(input);
-        section.appendChild(inputContainer);
-        return inputContainer;
-    }
-
-    addTextarea(section, labelText, placeholder = '', callback) {
-        const textareaContainer = document.createElement('div');
-        textareaContainer.classList.add('textarea-container');
-
-        const textareaLabel = document.createElement('label');
-        textareaLabel.textContent = labelText;
-        textareaLabel.classList.add('textarea-label');
-        textareaContainer.appendChild(textareaLabel);
-
-        const textarea = document.createElement('textarea');
-        textarea.placeholder = placeholder;
-        textarea.classList.add('textarea-input');
-        
-        textarea.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            document.execCommand('insertText', false, text);
-        });
-
-        textarea.addEventListener('keydown', (e) => {
-            if (e.ctrlKey) {
-                if (e.key === 'c' || e.key === 'v' || e.key === 'a') {
-                    return;
-                }
-            }
-            
-            if (!e.ctrlKey && !e.altKey && !e.metaKey) {
-                if (e.key.length === 1) {
-                    e.preventDefault();
-                    document.execCommand('insertText', false, e.key);
-                } else if (e.key === 'Backspace') {
-                    e.preventDefault();
-                    document.execCommand('delete', false);
-                } else if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.execCommand('insertText', false, '\n');
-                }
-            }
-        });
-
-        textarea.addEventListener('input', () => {
-            callback(textarea.value);
-        });
-
-        textareaContainer.appendChild(textarea);
-        section.appendChild(textareaContainer);
-        return textareaContainer;
     }
 
     toggleMinimize() {

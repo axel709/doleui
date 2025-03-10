@@ -178,14 +178,47 @@
     background-color: var(--box-color);
     color: white;
     border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .section-title {
     font-size: 0.8em;
     font-weight: bold;
     color: var(--text-color);
-    margin-bottom: 10px;
-    text-align: left;
+}
+
+.section-toggle {
+    background: transparent;
+    border: none;
+    color: var(--close-color);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-toggle:hover {
+    background: var(--close-hover-bg);
+    color: var(--close-hover-color);
+}
+
+.section-content {
+    transition: opacity 0.15s ease;
+}
+
+.section.minified .section-content {
+    display: none;
 }
 
 .tab-content {
