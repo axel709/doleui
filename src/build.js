@@ -79,6 +79,8 @@ const example = `
                 }
             );
 
+            mainWindow.addLinebreak(section1);
+
             mainWindow.addTextInput(
                 section1,
                 "Text Input",
@@ -96,6 +98,8 @@ const example = `
                     console.log("Textarea value:", value);
                 }
             );
+
+            mainWindow.addLinebreak(section2);
 
             mainWindow.addButton(
                 section2,

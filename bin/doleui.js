@@ -808,6 +808,14 @@ input:checked + .toggle-slider:before {
     border-color: var(--tab-active-bg);
 }
 
+.linebreak {
+    width: 100%;
+    height: 1px;
+    background: var(--close-color);
+    opacity: 0.5;
+    margin: 15px 0;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -1453,6 +1461,13 @@ this.applyTheme = function(theme) {
 
         section.contentContainer.appendChild(listContainer);
         return listContainer;
+    }
+
+    addLinebreak(section) {
+        const linebreak = document.createElement('div');
+        linebreak.classList.add('linebreak');
+        section.contentContainer.appendChild(linebreak);
+        return linebreak;
     }
 
     toggleMinimize() {

@@ -574,6 +574,13 @@ class Window {
         return listContainer;
     }
 
+    addLinebreak(section) {
+        const linebreak = document.createElement('div');
+        linebreak.classList.add('linebreak');
+        section.contentContainer.appendChild(linebreak);
+        return linebreak;
+    }
+
     toggleMinimize() {
         if (!this.isMinified) {
             this.tabsContainer.style.opacity = '0';
